@@ -4,8 +4,8 @@
   "description": "Elm playground",
   "main": "index.js",
   "scripts": {
-    "elm": "elm",
-    "watch": "chokidar '**/*.elm' -c 'elm make Main.elm --output elm.compiled.js'"
+    "build": "webpack",
+    "dev": "webpack-dev-server --inline"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,11 @@
     "url": "https://github.com/Rhadow/elm-demo/issues"
   },
   "homepage": "https://github.com/Rhadow/elm-demo#readme",
-  "devDependencies": {
-    "chokidar-cli": "^1.2.0",
-    "elm": "^0.16.0"
+  "devDependencies": {},
+  "dependencies": {
+    "elm-webpack-loader": "^2.0.1",
+    "file-loader": "^0.8.5",
+    "webpack": "^1.12.15",
+    "webpack-dev-server": "^1.14.1"
   }
 }
