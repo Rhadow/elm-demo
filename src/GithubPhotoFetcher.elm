@@ -24,14 +24,6 @@ type Action
     | SetProfileUrl (Maybe String)
 
 
-getErrorMessage: String -> String
-getErrorMessage account =
-    if account == "" then
-        "Please enter an account name!"
-    else
-        ""
-
-
 decodeUrl: Json.Decoder String
 decodeUrl = "avatar_url" := Json.string
 
@@ -76,7 +68,20 @@ update action model =
         SetAccount newAccount ->
             ({model | account = newAccount }, Effects.none)
         SetProfileUrl maybePhotoUrl ->
-            ({model | photoUrl = Maybe.withDefault initialModel.photoUrl maybePhotoUrl }, Effects.none)
+            case maybePhotoUrl of
+                Just photoUrl ->
+                    ( { model
+                      | photoUrl = photoUrl
+                      }
+                    , Effects.none
+                    )
+                Nothing ->
+                    ( { model
+                      | photoUrl = ""
+                      , errorMessage = "No such user!"
+                      }
+                    , Effects.none
+                    )
 
 -- VIEW
 
