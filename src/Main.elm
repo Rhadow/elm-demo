@@ -2,7 +2,7 @@ module Main where
 
 import StartApp
 import Html exposing (..)
-import Html.Attributes exposing (for, id, value)
+import Html.Attributes exposing (for, id, value, style)
 import Html.Events exposing (onClick, on, targetValue)
 import Maybe exposing ( Maybe(..) ) -- Maybe, Just, Nothing
 import Effects exposing (Effects)
@@ -15,8 +15,8 @@ type alias Model =
     }
 
 
-type Action =
-    NoOp
+type Action
+    = NoOp
     | ValidateForm
     | SetAccount String
 
@@ -53,44 +53,43 @@ update action model =
 
 textInput: String -> String -> String -> Html
 textInput id' labelName value' =
-    div [] [
-        label [
-            for id'
-        ] [
-            text labelName
-        ]
-        , input [
-            id id'
+    div
+        []
+        [ label [for id'] [text labelName]
+        , input
+            [ id id'
             , value value'
-        ] []
-    ]
+            ]
+            []
+        ]
 
 
 view: Signal.Address Action -> Model -> Html
 view address model =
-    div [] [
-        h1 [] [ text "Github Profile Fetcher"]
-        , div [] [
-            label [
-                for "account"
-            ] [
-                text "Github account:"
+    div
+        []
+        [ h1 [] [ text "Github Profile Fetcher"]
+        , div
+            []
+            [ label [for "account"] [text "Github account:"]
+            , input
+                [ id "account"
+                , value model.account
+                , on "input" targetValue (\newVal -> Signal.message address (SetAccount newVal))
+                ]
+                []
             ]
-            , input [
-                id "account"
-                , value model.account,
-                on "input" targetValue (\newVal -> Signal.message address (SetAccount newVal))
-            ] []
+        , div
+            [ style
+                [ ("color", "red")
+                , ("font-weight", "bold")
+                ]
+            ]
+            [text model.errorMessage]
+        , button
+            [onClick address ValidateForm]
+            [text "Submit"]
         ]
-        , div [] [
-            text model.errorMessage
-        ]
-        , button [
-            onClick address ValidateForm
-        ] [
-            text "Submit"
-        ]
-    ]
 
 
 app =
