@@ -1,95 +1,9 @@
 module Main where
 
 import StartApp
-import Html exposing (..)
-import Html.Attributes exposing (for, id, value, style)
-import Html.Events exposing (onClick, on, targetValue)
-import Maybe exposing ( Maybe(..) ) -- Maybe, Just, Nothing
-import Effects exposing (Effects)
-
-
-type alias Model =
-    { account: String
-    , errorMessage: String
-    , photoUrl: Maybe String
-    }
-
-
-type Action
-    = NoOp
-    | ValidateForm
-    | SetAccount String
-
-
-
-init: (Model, Effects Action)
-init =
-    ({ account = ""
-    , errorMessage = ""
-    , photoUrl = Nothing
-    }
-    , Effects.none
-    )
-
-
-getErrorMessage: String -> String
-getErrorMessage account =
-    if account == "" then
-        "Please enter an account name!"
-    else
-        ""
-
-
-update: Action -> Model -> (Model, Effects Action)
-update action model =
-    case action of
-        NoOp ->
-            (model, Effects.none)
-        ValidateForm ->
-            ({model | errorMessage = getErrorMessage model.account}, Effects.none)
-        SetAccount newAccount ->
-            ({model | account = newAccount }, Effects.none)
-
-
-textInput: String -> String -> String -> Html
-textInput id' labelName value' =
-    div
-        []
-        [ label [for id'] [text labelName]
-        , input
-            [ id id'
-            , value value'
-            ]
-            []
-        ]
-
-
-view: Signal.Address Action -> Model -> Html
-view address model =
-    div
-        []
-        [ h1 [] [ text "Github Profile Fetcher"]
-        , div
-            []
-            [ label [for "account"] [text "Github account:"]
-            , input
-                [ id "account"
-                , value model.account
-                , on "input" targetValue (\newVal -> Signal.message address (SetAccount newVal))
-                ]
-                []
-            ]
-        , div
-            [ style
-                [ ("color", "red")
-                , ("font-weight", "bold")
-                ]
-            ]
-            [text model.errorMessage]
-        , button
-            [onClick address ValidateForm]
-            [text "Submit"]
-        ]
+import Task
+import GithubPhotoFetcher exposing (init, update, view)
+import Effects exposing (Never)
 
 
 app =
@@ -101,6 +15,10 @@ app =
         }
 
 
-main: Signal Html
 main =
     app.html
+
+
+port tasks: Signal (Task.Task Never ())
+port tasks =
+    app.tasks

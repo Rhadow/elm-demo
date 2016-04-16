@@ -11,6 +11,11 @@ module.exports = {
     module: {
         loaders: [
             {
+                test: /\.png$/,
+                exclude: /node_modules/,
+                loader: 'file?name=assets/[name].[ext]'
+            },
+            {
                 test: /\.html$/,
                 exclude: /node_modules/,
                 loader: 'file?name=[name].[ext]'
