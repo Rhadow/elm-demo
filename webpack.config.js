@@ -16,7 +16,7 @@ module.exports = {
                 loader: 'file?name=assets/[name].[ext]'
             },
             {
-                test: /\.html$/,
+                test: /\.(html|css)$/,
                 exclude: /node_modules/,
                 loader: 'file?name=[name].[ext]'
             },
