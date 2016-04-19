@@ -13,8 +13,8 @@ type Action
     | Decrease
 
 
-init: Model
-init = 0
+model: Model
+model = 0
 
 
 update: Action -> Model -> Model
