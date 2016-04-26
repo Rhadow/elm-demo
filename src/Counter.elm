@@ -12,8 +12,8 @@ type Action
     | Decrease
 
 
-init: Model
-init = 0
+init: Int -> Model
+init val = val
 
 
 update: Action -> Model -> Model
