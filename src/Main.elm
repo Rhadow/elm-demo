@@ -8,7 +8,7 @@ import Counter exposing (init, update, view)
 main: Signal Html
 main =
     StartApp.Simple.start
-        { model = init
+        { model = init 0
         , update = update
         , view = view
         }
