@@ -2,14 +2,14 @@ module Main where
 
 import StartApp
 import Html exposing (Html)
-import GifFetcher exposing (init, update, view)
+import DoubleGifFetcher exposing (init, update, view)
 import Task
 import Effects exposing (Never)
 
 
 app =
     StartApp.start
-        { init = init "coding"
+        { init = init "cat" "dog"
         , update = update
         , view = view
         , inputs = []
