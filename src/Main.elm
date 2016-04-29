@@ -2,7 +2,7 @@ module Main where
 
 import StartApp.Simple
 import Html exposing (Html)
-import CounterList exposing (init, update, view)
+import CounterListExtra exposing (init, update, view)
 
 
 main: Signal Html
