@@ -1,14 +1,26 @@
 module Main where
 
-import StartApp.Simple
+import StartApp
 import Html exposing (Html)
-import CounterListExtra exposing (init, update, view)
+import GifFetcher exposing (init, update, view)
+import Task
+import Effects exposing (Never)
+
+
+app =
+    StartApp.start
+        { init = init "coding"
+        , update = update
+        , view = view
+        , inputs = []
+        }
 
 
 main: Signal Html
 main =
-    StartApp.Simple.start
-        { model = init 0
-        , update = update
-        , view = view
-        }
+    app.html
+
+
+port tasks: Signal (Task.Task Never ())
+port tasks =
+    app.tasks
