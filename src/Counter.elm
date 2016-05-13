@@ -1,4 +1,4 @@
-module Counter where
+module Counter exposing (model, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (style, class)
@@ -24,17 +24,16 @@ update action model =
         Decrease -> model - 1
 
 
-view: Signal.Address Action -> Model -> Html
-view address model =
+view: Model -> Html Action
+view model =
     div
         []
-        [ button [onClick address Decrease, class "counter-button"] [text "-"]
+        [ button [onClick Decrease, class "counter-button"] [text "-"]
         , div [counterStyle] [text (toString model)]
-        , button [onClick address Increase, class "counter-button"] [text "+"]
+        , button [onClick Increase, class "counter-button"] [text "+"]
         ]
 
 
-counterStyle: Attribute
 counterStyle =
     style
         [ ("color", "red")

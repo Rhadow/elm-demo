@@ -5,4 +5,4 @@ require('./index.css');
 require('./assets/no-profile.png');
 
 var Elm = require('./Main');
-Elm.embed(Elm.Main, document.getElementById('root'));
+Elm.Main.embed(document.getElementById('root'));
