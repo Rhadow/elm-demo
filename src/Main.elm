@@ -4,10 +4,10 @@ import Html.App
 import Html exposing (Html)
 
 -- Example 1. Counter
-import Counter exposing (model, update, view)
+-- import Counter exposing (model, update, view)
 
 -- Example 2. Form Validation
--- import FormValidator exposing (model, update, view)
+import FormValidator exposing (model, update, view)
 
 -- Example 3. Form Validation and Http request
 -- import GithubPhotoFetcher exposing (init, update, view)

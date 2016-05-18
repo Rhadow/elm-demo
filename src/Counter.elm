@@ -29,7 +29,7 @@ view model =
     div
         []
         [ button [onClick Decrease, class "counter-button"] [text "-"]
-        , div [counterStyle] [text (toString model)]
+        , span [counterStyle] [text (toString model)]
         , button [onClick Increase, class "counter-button"] [text "+"]
         ]
 

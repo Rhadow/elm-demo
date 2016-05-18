@@ -1,8 +1,8 @@
-module FormValidator where
+module FormValidator exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (style, id, for, value, type')
-import Html.Events exposing (on, onClick, targetValue)
+import Html.Events exposing (on, onClick, onInput)
 
 
 type alias Model =
@@ -61,14 +61,13 @@ update action model =
             in { model | errorMessage = newErrorMessage }
 
 
-inputWithError: String -> String -> String -> String -> String -> (String -> Signal.Message) -> Html
-inputWithError inputId displayText inputValue errMsg inputType onInputHandler =
+inputWithError inputId displayText inputValue errMsg inputType onInputAction =
     div
         []
         [ label [for inputId] [text displayText]
         , input
             [ id inputId
-            , on "input" targetValue onInputHandler
+            , onInput onInputAction
             , value inputValue
             , type' inputType
             ]
@@ -77,8 +76,8 @@ inputWithError inputId displayText inputValue errMsg inputType onInputHandler =
         ]
 
 
-view: Signal.Address Action -> Model -> Html
-view address model =
+view: Model -> Html Action
+view model =
     div
         []
         [ h1 [] [ text "Form Validation Demo" ]
@@ -88,13 +87,13 @@ view address model =
             model.username
             model.errorMessage.userErrMsg
             "text"
-            (\str -> Signal.message address (SetUser str))
+            SetUser
         , inputWithError
             "password"
             "Password: "
             model.password
             model.errorMessage.passwordErrMsg
             "password"
-            (\str -> Signal.message address (SetPassword str))
-        , button [onClick address Validate] [text "Submit"]
+            SetPassword
+        , button [onClick Validate] [text "Submit"]
         ]
