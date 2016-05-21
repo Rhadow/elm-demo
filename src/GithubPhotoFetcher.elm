@@ -1,9 +1,8 @@
-module GithubPhotoFetcher where
+module GithubPhotoFetcher exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value, style, src)
-import Html.Events exposing (onClick, on, targetValue)
-import Effects exposing (Effects)
+import Html.Events exposing (onClick, onInput)
 import Http
 import Task
 import Json.Decode as Json exposing ((:=))
@@ -17,23 +16,24 @@ type alias Model =
     }
 
 
-type Action
+type Msg
     = NoOp
     | ValidateForm
     | SetAccount String
-    | SetProfileUrl (Maybe String)
+    | SetProfileUrl String
+    | FetchFailed Http.Error
 
 
 decodeUrl: Json.Decoder String
 decodeUrl = "avatar_url" := Json.string
 
 
-getProfilePicture: String -> Effects Action
+getProfilePicture: String -> Cmd Msg
 getProfilePicture account =
-    Http.get decodeUrl ("https://api.github.com/users/" ++ account)
-        |> Task.toMaybe
-        |> Task.map SetProfileUrl
-        |> Effects.task
+    let
+        url = "https://api.github.com/users/" ++ account
+    in
+        Task.perform FetchFailed SetProfileUrl (Http.get decodeUrl url)
 
 -- MODEL
 
@@ -45,48 +45,46 @@ initialModel =
     }
 
 
-init: (Model, Effects Action)
+init: (Model, Cmd Msg)
 init =
-    (initialModel, Effects.none)
+    (initialModel, Cmd.none)
 
 -- UPDATE
 
-update: Action -> Model -> (Model, Effects Action)
+update: Msg -> Model -> (Model, Cmd Msg)
 update action model =
     case action of
         NoOp ->
-            (model, Effects.none)
+            (model, Cmd.none)
         ValidateForm ->
             if model.account == "" then
                 ( {model | errorMessage = "Please enter an account name!"}
-                , Effects.none
+                , Cmd.none
                 )
             else
                 ( {model | errorMessage = ""}
                 , getProfilePicture model.account
                 )
         SetAccount newAccount ->
-            ({model | account = newAccount }, Effects.none)
-        SetProfileUrl maybePhotoUrl ->
-            case maybePhotoUrl of
-                Just photoUrl ->
-                    ( { model
-                      | photoUrl = photoUrl
-                      }
-                    , Effects.none
-                    )
-                Nothing ->
-                    ( { model
-                      | photoUrl = ""
-                      , errorMessage = "No such user!"
-                      }
-                    , Effects.none
-                    )
+            ({model | account = newAccount }, Cmd.none)
+        SetProfileUrl photoUrl ->
+            ( { model
+              | photoUrl = photoUrl
+              }
+            , Cmd.none
+            )
+        FetchFailed _ ->
+            ( { model
+              | photoUrl = ""
+              , errorMessage = "No such user!"
+              }
+            , Cmd.none
+            )
 
 -- VIEW
 
-view: Signal.Address Action -> Model -> Html
-view address model =
+view: Model -> Html Msg
+view model =
     div
         []
         [ h1 [] [ text "Github Profile Fetcher"]
@@ -96,7 +94,7 @@ view address model =
             , input
                 [ id "account"
                 , value model.account
-                , on "input" targetValue (\newVal -> Signal.message address (SetAccount newVal))
+                , onInput SetAccount
                 ]
                 []
             ]
@@ -107,6 +105,6 @@ view address model =
                 ]
             ]
             [text model.errorMessage]
-        , button [onClick address ValidateForm] [text "Submit"]
+        , button [onClick ValidateForm] [text "Submit"]
         , img [src model.photoUrl] []
         ]

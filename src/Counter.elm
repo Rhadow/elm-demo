@@ -8,7 +8,7 @@ type alias Model =
     Int
 
 
-type Action
+type Msg
     = Increase
     | Decrease
 
@@ -17,14 +17,14 @@ model: Model
 model = 0
 
 
-update: Action -> Model -> Model
+update: Msg -> Model -> Model
 update action model =
     case action of
         Increase -> model + 1
         Decrease -> model - 1
 
 
-view: Model -> Html Action
+view: Model -> Html Msg
 view model =
     div
         []

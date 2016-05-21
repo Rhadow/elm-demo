@@ -18,7 +18,7 @@ type alias ErrorMessage =
     }
 
 
-type Action
+type Msg
     = SetUser String
     | SetPassword String
     | Validate
@@ -48,7 +48,7 @@ model =
     }
 
 
-update: Action -> Model -> Model
+update: Msg -> Model -> Model
 update action model =
     case action of
         SetUser newUser ->
@@ -76,7 +76,7 @@ inputWithError inputId displayText inputValue errMsg inputType onInputAction =
         ]
 
 
-view: Model -> Html Action
+view: Model -> Html Msg
 view model =
     div
         []
