@@ -10,7 +10,7 @@ import Html exposing (Html)
 -- import FormValidator exposing (model, update, view)
 
 -- Example 3. Form Validation and Http request
--- import GithubPhotoFetcher exposing (init, update, view)
+import GithubPhotoFetcher exposing (init, update, view)
 
 
 -- For Example 1 & 2
